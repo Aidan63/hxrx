@@ -1,0 +1,6 @@
+{
+    "haxe.enableExtendedIndentation": true,
+    "haxe.configurations": [
+        [ "build.hxml" ]
+    ]
+}

@@ -1,0 +1,8 @@
+-D analyzer-optimize
+-p src
+-m Main
+-L hxnodejs
+
+--dce full
+--debug
+--interp
