@@ -1,5 +1,7 @@
 package hxrx.observables;
 
+import hxrx.observer.AutoDetachingObserver;
+
 class Defer<T> implements IObservable<T>
 {
     final factory : ()->IObservable<T>;
@@ -11,6 +13,14 @@ class Defer<T> implements IObservable<T>
 
     public function subscribe<E>(_observer : IObserver<T>)
     {
-        return factory().subscribe(_observer);
+        final detaching    = new AutoDetachingObserver(_observer);
+        final subscription = factory().subscribe(_observer);
+
+        if (!detaching.isAlive())
+        {
+            subscription.unsubscribe();
+        }
+
+        return subscription;
     }
 }

@@ -1,6 +1,8 @@
 package hxrx.observables;
 
-class Create<T, E> implements IObservable<T>
+import hxrx.observer.AutoDetachingObserver;
+
+class Create<T> implements IObservable<T>
 {
     final func : (_observer : IObserver<T>)->ISubscription;
 
@@ -11,6 +13,14 @@ class Create<T, E> implements IObservable<T>
 
     public function subscribe(_observer : IObserver<T>)
     {
-        return func(_observer);
+        final detaching    = new AutoDetachingObserver(_observer);
+        final subscription = func(detaching);
+
+        if (!detaching.isAlive())
+        {
+            subscription.unsubscribe();
+        }
+
+        return subscription;
     }
 }

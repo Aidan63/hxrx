@@ -4,11 +4,11 @@ import haxe.Exception;
 
 class Observer<T> implements IObserver<T>
 {
-    final nextFunc : T->Void;
+    final nextFunc : Null<T->Void>;
 
-    final errorFunc : Exception->Void;
+    final errorFunc : Null<Exception->Void>;
 
-    final completeFunc : Void->Void;
+    final completeFunc : Null<Void->Void>;
 
 	public function new(_next, _error, _complete)
 	{
@@ -19,16 +19,25 @@ class Observer<T> implements IObserver<T>
 
 	public function onNext(_value : T)
 	{
-		nextFunc(_value);
+		if (nextFunc != null)
+		{
+			nextFunc(_value);
+		}
 	}
 
 	public function onError(_value : Exception)
 	{
-		errorFunc(_value);
+		if (errorFunc != null)
+		{
+			errorFunc(_value);
+		}
 	}
 
 	public function onCompleted()
 	{
-		completeFunc();
+		if (completeFunc != null)
+		{
+			completeFunc();
+		}
 	}
 }

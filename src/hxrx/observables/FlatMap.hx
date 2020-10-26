@@ -1,5 +1,6 @@
 package hxrx.observables;
 
+import hxrx.observer.AutoDetachingObserver;
 import hxrx.observer.Observer;
 
 class FlatMap<T, E> implements IObservable<E>
@@ -16,6 +17,15 @@ class FlatMap<T, E> implements IObservable<E>
 
     public function subscribe(_observer : IObserver<E>) : ISubscription
     {
-        return source.subscribe(new Observer(_next -> func(_next).subscribe(_observer), _observer.onError, _observer.onCompleted));
+        final detaching    = new AutoDetachingObserver(_observer);
+        final child        = new Observer(detaching.onNext, detaching.onError, null);
+        final subscription = source.subscribe(new Observer(v -> func(v).subscribe(child), child.onError, child.onCompleted));
+
+        if (!detaching.isAlive())
+        {
+            subscription.unsubscribe();
+        }
+
+        return subscription;
     }
 }

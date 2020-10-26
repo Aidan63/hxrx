@@ -12,7 +12,11 @@ function create<T>(_func : (_observer : IObserver<T>)->ISubscription)
 
 function defer<T>(_factory : ()->IObservable<T>)
 {
-    return new Defer(_factory);
+    return create(_observer -> {
+        _factory().subscribe(_observer);
+
+        return new Empty();
+    });
 }
 
 function empty()
@@ -38,12 +42,16 @@ function error(_error : Exception)
 
 function range(_min : Int, _max : Int)
 {
-    return new Range(_min, _max);
-}
+    return create(_observer -> {
+        for (i in _min..._max + 1)
+        {
+            _observer.onNext(i);
+        }
 
-function interval(_time : Float)
-{
-    return new TimerInterval(_time);
+        _observer.onCompleted();
+
+        return new Empty();
+    });
 }
 
 // Transform

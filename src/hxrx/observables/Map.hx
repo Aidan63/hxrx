@@ -1,5 +1,6 @@
 package hxrx.observables;
 
+import hxrx.observer.AutoDetachingObserver;
 import hxrx.observer.Observer;
 
 class Map<T, E> implements IObservable<E>
@@ -16,6 +17,14 @@ class Map<T, E> implements IObservable<E>
 
     public function subscribe(_observer : IObserver<E>)
     {
-        return source.subscribe(new Observer(_value -> _observer.onNext(func(_value)), _observer.onError, _observer.onCompleted));
+        final detaching    = new AutoDetachingObserver(_observer);
+        final subscription = source.subscribe(new Observer(_value -> detaching.onNext(func(_value)), detaching.onError, detaching.onCompleted));
+
+        if (!detaching.isAlive())
+        {
+            subscription.unsubscribe();
+        }
+
+        return subscription;
     }
 }

@@ -1,3 +1,5 @@
+import hxrx.observables.ConnectableObservable;
+import hxrx.subscriptions.Single;
 import hxrx.IObserver;
 import hxrx.IObservable;
 import haxe.Exception;
@@ -11,11 +13,24 @@ class Main
 {
 	static function main()
 	{
-		final observer   = new Observer((_v : Int) -> trace('subscription : $_v'), _e -> throw _e, () -> trace('done'));
+		final observer = new Observer((_v : Int) -> trace('subscription : $_v'), _e -> throw _e, () -> trace('done'));
+		// create(obs -> {
+		// 	obs.onNext('hello');
+		// 	obs.onCompleted();
 
-		// final observable = interval(2.5).print().publish();
-		// observable.subscribe(observer);
-		// observable.subscribe(observer);
+		// 	return new Single(() -> trace('disposed'));
+		// }).subscribe(observer);
+
+		// final observer   = new Observer((_v : Int) -> trace('subscription : $_v'), _e -> throw _e, () -> trace('done'));
+		// final observable = range(0, 5).print().publish();
+		// final s1 = observable.subscribe(observer);
+		// final s2 = observable.subscribe(observer);
+		// observable.connect();
+
+		// trace('--');
+
+		// s1.unsubscribe();
+		// s2.unsubscribe();
 		// observable.connect();
 
 		// create(_observer -> {
@@ -32,6 +47,16 @@ class Main
 		// 	return new Empty();
 		// }).map(_str -> _str.length).subscribe(observer);
 
+		// create(obs -> {
+		// 	for (i in 1...4)
+		// 	{
+		// 		obs.onNext(i);
+		// 	}
+
+		// 	obs.onCompleted();
+
+		// 	return new Single(() -> trace('disposed'));
+		// }).flatMap(v -> range(v, 3)).subscribe(observer);
 		// range(1, 3).flatMap(x -> range(x, 3)).subscribe(observer);
 	}
 }

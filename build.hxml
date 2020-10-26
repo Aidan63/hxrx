@@ -1,7 +1,8 @@
 -D analyzer-optimize
 -p src
--m Main
--L hxnodejs
+-p tests
+-m Tests
+-L buddy
 
 --dce full
 --debug

@@ -1,5 +1,6 @@
 package hxrx.observables;
 
+import hxrx.observer.AutoDetachingObserver;
 import hxrx.observer.Observer;
 import hxrx.subscriptions.Single;
 import haxe.ds.List;
@@ -25,7 +26,15 @@ class ConnectableObservable<T> implements IConnectableObservable<T>
 
     public function connect() : ISubscription
     {
-        return source.subscribe(new Observer(onNextObservers, onErrorObservers, onCompleteObservers));
+        final detaching    = new AutoDetachingObserver(new Observer(onNextObservers, onErrorObservers, onCompleteObservers));
+        final subscription = source.subscribe(detaching);
+
+        if (!detaching.isAlive())
+        {
+            subscription.unsubscribe();
+        }
+
+        return subscription;
     }
 
     function remove(_observer : IObserver<T>)

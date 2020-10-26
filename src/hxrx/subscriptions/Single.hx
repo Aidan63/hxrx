@@ -4,9 +4,9 @@ class Single implements ISubscription
 {
     var done : Bool;
 
-    final func : ()->Void;
+    final func : Null<()->Void>;
 
-    public function new(_func)
+    public function new(_func = null)
     {
         done = false;
         func = _func;
@@ -16,7 +16,10 @@ class Single implements ISubscription
     {
         if (!done)
         {
-            func();
+            if (func != null)
+            {
+                func();
+            }
 
             done = true;
         }
