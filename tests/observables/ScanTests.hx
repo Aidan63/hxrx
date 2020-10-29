@@ -9,36 +9,35 @@ import hxrx.observables.Observables;
 using hxrx.observables.Observables;
 using buddy.Should;
 
-class FlatMapTests extends BuddySuite
+class ScanTests extends BuddySuite
 {
     public function new()
     {
-        describe('FlatMap', {
+        describe('Scan', {
             describe('Successful Observable', {
                 var disposed  = false;
                 var completed = 0;
                 var errored   = 0;
-                var accu      = 0;
-    
-                final observer = new Observer(v -> accu += v, _ -> errored += 1, () -> completed += 1);
-    
+                
+                final output   = [];
+                final observer = new Observer(v -> output.push(v), _ -> errored += 1, () -> completed += 1);
+
                 create(o -> {
-                    for (i in 1...4)
-                    {
-                        o.onNext(i);
-                    }
-    
+                    o.onNext('h');
+                    o.onNext('e');
+                    o.onNext('l');
+                    o.onNext('l');
+                    o.onNext('o');
+                    o.onNext('!');
                     o.onCompleted();
-    
+
                     return new Single(() -> disposed = true);
-                }).flatMap(v -> range(1, v)).subscribe(observer);
-    
-                it('will pipe all child observable values into the observer', {
-                    final expected = 1 + 2 + 3 + 1 + 2 + 1;
-    
-                    accu.should.be(expected);
+                }).scan(2, (acc, next) -> acc + 1).subscribe(observer);
+
+                it('will output the accumulated value every time it changes', {
+                    output.should.containExactly([ 3, 4, 5, 6, 7, 8 ]);
                 });
-                it('will dispose of the subscription once all child observables have completed', {
+                it('will automatically dispose of the subscription when the observable completes', {
                     disposed.should.be(true);
                 });
                 it('will have called the onCompleted function of the observer once', {
@@ -52,34 +51,26 @@ class FlatMapTests extends BuddySuite
                 var disposed  = false;
                 var completed = 0;
                 var errored   = 0;
-                var accu      = 0;
-    
-                final observer = new Observer(v -> accu += v, _ -> errored += 1, () -> completed += 1);
-    
+                
+                final output   = [];
+                final observer = new Observer(v -> output.push(v), _ -> errored += 1, () -> completed += 1);
+
                 create(o -> {
-                    for (i in 1...4)
-                    {
-                        if (i == 3)
-                        {
-                            o.onError(new Exception('stopping'));
-                        }
-                        else
-                        {
-                            o.onNext(i);
-                        }
-                    }
-    
-                    o.onCompleted();
-    
+                    o.onNext('h');
+                    o.onNext('e');
+                    o.onNext('l');
+                    o.onNext('l');
+                    o.onNext('o');
+                    o.onNext('!');
+                    o.onError(new Exception('stopping'));
+
                     return new Single(() -> disposed = true);
-                }).flatMap(v -> range(1, v)).subscribe(observer);
-    
-                it('will pipe all child observable values into the observer', {
-                    final expected = 1 + 1 + 2;
-    
-                    accu.should.be(expected);
+                }).scan(2, (acc, next) -> acc + 1).subscribe(observer);
+
+                it('will output the accumulated value every time it changes', {
+                    output.should.containExactly([ 3, 4, 5, 6, 7, 8 ]);
                 });
-                it('will dispose of the subscription once all child observables have completed', {
+                it('will automatically dispose of the subscription when the observable completes', {
                     disposed.should.be(true);
                 });
                 it('will have called the onError function of the observer once', {

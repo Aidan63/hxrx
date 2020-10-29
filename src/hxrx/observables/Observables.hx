@@ -54,6 +54,25 @@ function range(_min : Int, _max : Int)
     });
 }
 
+function fromIterator<T>(_iterable : Iterator<T>)
+{
+    return create(_observer -> {
+        for (v in _iterable)
+        {
+            _observer.onNext(v);
+        }
+
+        _observer.onCompleted();
+
+        return new Empty();
+    });
+}
+
+function fromIterable<T>(_iterable : Iterable<T>)
+{
+    return fromIterator(_iterable.iterator());
+}
+
 // Transform
 
 function map<T, E>(_source : IObservable<T>, _func : T -> E) : IObservable<E>

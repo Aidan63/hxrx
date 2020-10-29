@@ -19,7 +19,7 @@ class FlatMap<T, E> implements IObservable<E>
     {
         final detaching    = new AutoDetachingObserver(_observer);
         final child        = new Observer(detaching.onNext, detaching.onError, null);
-        final subscription = source.subscribe(new Observer(v -> func(v).subscribe(child), child.onError, child.onCompleted));
+        final subscription = source.subscribe(new Observer(v -> func(v).subscribe(child), detaching.onError, detaching.onCompleted));
 
         if (!detaching.isAlive())
         {

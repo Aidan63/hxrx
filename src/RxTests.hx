@@ -9,7 +9,7 @@ import hxrx.subscriptions.Empty;
 
 using hxrx.observables.Observables;
 
-class Main
+class RxTests
 {
 	static function main()
 	{

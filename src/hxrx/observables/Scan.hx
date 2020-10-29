@@ -1,5 +1,6 @@
 package hxrx.observables;
 
+import hxrx.observer.AutoDetachingObserver;
 import hxrx.observer.Observer;
 
 class Scan<T, E> implements IObservable<E>
@@ -19,6 +20,14 @@ class Scan<T, E> implements IObservable<E>
 
     public function subscribe(_observer : IObserver<E>) : ISubscription
     {
-        return source.subscribe(new Observer(_value -> accumulated = func(accumulated, _value), _observer.onError, _observer.onCompleted));
+        final detaching    = new AutoDetachingObserver(_observer);
+        final subscription = source.subscribe(new Observer(_value -> detaching.onNext(accumulated = func(accumulated, _value)), detaching.onError, detaching.onCompleted));
+
+        if (detaching.isAlive())
+        {
+            subscription.unsubscribe();
+        }
+        
+        return subscription;
     }
 }
