@@ -96,10 +96,7 @@ function flatMap<T, E>(_source : IObservable<T>, _func : (_value : T)->IObservab
 
 // Utility
 
-function print<T>(_source : IObservable<T>) : IObservable<T>
-{
-    return new Print(_source);
-}
+
 
 // Conditional and Boolean
 
@@ -114,4 +111,11 @@ function print<T>(_source : IObservable<T>) : IObservable<T>
 function publish<T>(_source : IObservable<T>) : IConnectableObservable<T>
 {
     return new ConnectableObservable(_source);
+}
+
+// Threading
+
+function synchronise<T>(_source : IObservable<T>) : IObservable<T>
+{
+    return new Synchronised(_source);
 }

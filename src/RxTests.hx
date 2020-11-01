@@ -1,3 +1,5 @@
+import haxe.Timer;
+import haxe.MainLoop;
 import hxrx.observables.ConnectableObservable;
 import hxrx.subscriptions.Single;
 import hxrx.IObserver;
@@ -13,7 +15,15 @@ class RxTests
 {
 	static function main()
 	{
-		final observer = new Observer((_v : Int) -> trace('subscription : $_v'), _e -> throw _e, () -> trace('done'));
+		final observer = new Observer(v -> trace('value: $v'), e -> throw e, () -> trace('complete'));
+		
+		create(obs -> {
+			obs.onNext('hello');
+			obs.onNext('world');
+			obs.onCompleted();
+
+			return new Single(() -> trace('disposed'));
+		}).synchronise().subscribe(observer);
 		// create(obs -> {
 		// 	obs.onNext('hello');
 		// 	obs.onCompleted();

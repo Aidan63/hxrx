@@ -1,6 +1,8 @@
 -D analyzer-optimize
 -p src
--m RxTests
+-p tests
+-m Tests
+-L buddy
 
 --dce full
 --debug
