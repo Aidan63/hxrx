@@ -15,15 +15,29 @@ class RxTests
 {
 	static function main()
 	{
+		// MainLoop.add(() -> {});
+
 		final observer = new Observer(v -> trace('value: $v'), e -> throw e, () -> trace('complete'));
 		
-		create(obs -> {
+		final published = create(obs -> {
+			// MainLoop.runInMainThread(() -> obs.onNext('hello'));
+			// MainLoop.runInMainThread(() -> obs.onNext('world'));
+			// MainLoop.runInMainThread(() -> obs.onCompleted());
+
 			obs.onNext('hello');
 			obs.onNext('world');
 			obs.onCompleted();
 
 			return new Single(() -> trace('disposed'));
-		}).synchronise().subscribe(observer);
+		}).publish().refCount();
+
+		trace('subscribing');
+
+		final s1 = published.subscribe(observer);
+		final s2 = published.subscribe(observer);
+
+		trace('starting loop');
+
 		// create(obs -> {
 		// 	obs.onNext('hello');
 		// 	obs.onCompleted();

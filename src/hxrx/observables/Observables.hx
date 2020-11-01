@@ -109,6 +109,11 @@ function publish<T>(_source : IObservable<T>) : IConnectableObservable<T>
     return new ConnectableObservable(_source);
 }
 
+function refCount<T>(_source : IConnectableObservable<T>) : IObservable<T>
+{
+    return new RefCount(_source);
+}
+
 // Threading
 
 function synchronise<T>(_source : IObservable<T>) : IObservable<T>

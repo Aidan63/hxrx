@@ -8,6 +8,8 @@ class AutoDetachingObserver<T> implements IObserver<T>
 
     var alive : Bool;
 
+    public var subscription : Null<ISubscription>;
+
     public function new(_child)
     {
         child = _child;
@@ -28,6 +30,8 @@ class AutoDetachingObserver<T> implements IObserver<T>
         {
             child.onError(_value);
 
+            unsubscribe();
+
             alive = false;
         }
     }
@@ -38,6 +42,8 @@ class AutoDetachingObserver<T> implements IObserver<T>
         {
             child.onCompleted();
 
+            unsubscribe();
+
             alive = false;
         }
     }
@@ -45,5 +51,13 @@ class AutoDetachingObserver<T> implements IObserver<T>
     public function isAlive()
     {
         return alive;
+    }
+
+    function unsubscribe()
+    {
+        if (subscription != null)
+        {
+            subscription.unsubscribe();
+        }
     }
 }
