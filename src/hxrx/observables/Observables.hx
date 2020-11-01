@@ -12,11 +12,7 @@ function create<T>(_func : (_observer : IObserver<T>)->ISubscription)
 
 function defer<T>(_factory : ()->IObservable<T>)
 {
-    return create(_observer -> {
-        _factory().subscribe(_observer);
-
-        return new Empty();
-    });
+    return create(_observer -> _factory().subscribe(_observer));
 }
 
 function empty()
