@@ -1,15 +1,13 @@
 package hxrx.schedulers;
 
-import hxrx.subscriptions.Single;
 import sys.thread.Tls;
-import hxrx.subscriptions.Empty;
 import haxe.Timer;
 
 class CurrentScheduler implements IScheduler
 {
-    public var running : Tls<Bool>;
+    var running : Tls<Bool>;
 
-    public final queue : Tls<List<ScheduledItem>>;
+    final queue : Tls<SchedulerQueue>;
 
     public function new()
     {
@@ -19,15 +17,27 @@ class CurrentScheduler implements IScheduler
 
     public function time() return Timer.stamp();
 
-    public function schedule(_task : (_scheduler : IScheduler) -> ISubscription, _time : Float)
+    public function scheduleNow(_task : (_scheduler : IScheduler) -> ISubscription)
+    {
+        return scheduleIn(0, _task);
+    }
+
+    public function scheduleAt(_dueTime : Date, _task : (_scheduler : IScheduler) -> ISubscription)
+    {
+        final diff = _dueTime.getTime() - Date.now().getTime();
+
+        return scheduleIn(diff / 1000, _task);
+    }
+
+    public function scheduleIn(_dueTime : Float, _task : (_scheduler : IScheduler) -> ISubscription)
     {
         if (!running.value)
         {
             running.value = true;
 
-            if (_time > 0)
+            if (_dueTime > 0)
             {
-                Sys.sleep(_time);
+                Sys.sleep(_dueTime);
             }
 
             var subscription : ISubscription = null;
@@ -69,22 +79,22 @@ class CurrentScheduler implements IScheduler
 
         if (q == null)
         {
-            queue.value = new List();
+            queue.value = new SchedulerQueue();
         }
 
-        final dt = time() + _time;
+        final dt = time() + _dueTime;
         final si = new ScheduledItem(this, _task, dt);
 
-        queue.value.push(si);
+        queue.value.enqueue(si);
 
         return si;
     }
 
-    function run(_queue : List<ScheduledItem>)
+    function run(_queue : SchedulerQueue)
     {
-        while (_queue.length > 0)
+        while (!_queue.isEmpty())
         {
-            final item = _queue.pop();
+            final item = _queue.dequeue();
     
             if (!item.cancelled)
             {

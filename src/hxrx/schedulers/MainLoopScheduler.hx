@@ -1,8 +1,9 @@
 package hxrx.schedulers;
 
+import hxrx.subscriptions.Single;
 import haxe.Timer;
 
-class ImmediateScheduler implements IScheduler
+class MainLoopScheduler implements IScheduler
 {
     public function new()
     {
@@ -25,11 +26,8 @@ class ImmediateScheduler implements IScheduler
 
     public function scheduleIn(_dueTime : Float, _task : (_scheduler : IScheduler) -> ISubscription)
     {
-        if (_dueTime > 0)
-        {
-            Sys.sleep(_dueTime);
-        }
+        final timer = Timer.delay(() -> _task(this), Std.int(_dueTime * 1000));
 
-        return _task(this);
+        return new Single(() -> timer.stop());
     }
 }
