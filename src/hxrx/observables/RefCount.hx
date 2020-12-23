@@ -21,10 +21,10 @@ class RefCount<T> implements IObservable<T>
     public function subscribe(_observer : IObserver<T>)
     {
         final detaching    = new AutoDetachingObserver(_observer);
-        final subscription = source.subscribe(detaching);
+        final subscription = source.subscribe(_observer);
         final composite    = new Composite([ subscription, new Single(decrementReference) ]);
 
-        detaching.subscription = composite;
+        detaching.setSubscription(composite);
 
         if (references == 0)
         {

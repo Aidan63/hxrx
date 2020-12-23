@@ -6,5 +6,6 @@ class Tests implements Buddy<[
     observables.MapTests,
     observables.ScanTests,
     observables.PublishTests,
+    observables.RefCountTests,
     schedulers.ImmediateSchedulerTests,
     schedulers.CurrentSchedulerTests, ]> { }
