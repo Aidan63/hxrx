@@ -22,10 +22,11 @@ class AutoDetachingObserver<T> implements IObserver<T>
         if (subscription == null)
         {
             subscription = _subscription;
-        }
-        if (disposed)
-        {
-            subscription.unsubscribe();
+
+            if (disposed)
+            {
+                subscription.unsubscribe();
+            }
         }
     }
 
@@ -36,14 +37,7 @@ class AutoDetachingObserver<T> implements IObserver<T>
             return;
         }
 
-        try
-        {
-            observer.onNext(_value);
-        }
-        catch (_)
-        {
-            unsubscribe();
-        }
+        observer.onNext(_value);
     }
 
     public function onError(_value : Exception)
