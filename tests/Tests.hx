@@ -9,4 +9,6 @@ class Tests implements Buddy<[
     observables.RefCountTests,
     observer.AutoDetachingObserverTests,
     schedulers.ImmediateSchedulerTests,
-    schedulers.CurrentSchedulerTests, ]> { }
+    schedulers.CurrentSchedulerTests,
+    subscriptions.SingleTests,
+    subscriptions.CompositeTests ]> { }

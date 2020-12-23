@@ -1,8 +1,10 @@
 package hxrx.subscriptions;
 
+import haxe.ds.ReadOnlyArray;
+
 class Composite implements ISubscription
 {
-    final subscriptions : Array<ISubscription>;
+    final subscriptions : ReadOnlyArray<ISubscription>;
 
     var done : Bool;
 
