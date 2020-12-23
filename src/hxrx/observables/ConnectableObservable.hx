@@ -29,10 +29,7 @@ class ConnectableObservable<T> implements IConnectableObservable<T>
         final detaching    = new AutoDetachingObserver(new Observer(onNextObservers, onErrorObservers, onCompleteObservers));
         final subscription = source.subscribe(detaching);
 
-        if (!detaching.isAlive())
-        {
-            subscription.unsubscribe();
-        }
+        detaching.setSubscription(subscription);
 
         return subscription;
     }

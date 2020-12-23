@@ -23,10 +23,7 @@ class Scan<T, E> implements IObservable<E>
         final detaching    = new AutoDetachingObserver(_observer);
         final subscription = source.subscribe(new Observer(_value -> detaching.onNext(accumulated = func(accumulated, _value)), detaching.onError, detaching.onCompleted));
 
-        if (detaching.isAlive())
-        {
-            subscription.unsubscribe();
-        }
+        detaching.setSubscription(subscription);
         
         return subscription;
     }

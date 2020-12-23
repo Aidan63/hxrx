@@ -23,10 +23,7 @@ class Synchronised<T> implements IObservable<T>
         final locking      = new Observer(v -> next(detaching, v), e -> error(detaching, e), () -> complete(detaching));
         final subscription = source.subscribe(locking);
 
-        if (!detaching.isAlive())
-        {
-            subscription.unsubscribe();
-        }
+        detaching.setSubscription(subscription);
 
         return subscription;
     }

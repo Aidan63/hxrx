@@ -4,60 +4,84 @@ import haxe.Exception;
 
 class AutoDetachingObserver<T> implements IObserver<T>
 {
-    final child : IObserver<T>;
+    final observer : IObserver<T>;
 
-    var alive : Bool;
+    var subscription : Null<ISubscription>;
 
-    public var subscription : Null<ISubscription>;
+    var disposed : Bool;
 
-    public function new(_child)
+    public function new(_observer)
     {
-        child = _child;
-        alive = true;
+        observer     = _observer;
+        subscription = null;
+        disposed     = false;
+    }
+
+    public function setSubscription(_subscription)
+    {
+        if (subscription == null)
+        {
+            subscription = _subscription;
+        }
+        if (disposed)
+        {
+            subscription.unsubscribe();
+        }
     }
 
 	public function onNext(_value : T)
     {
-        if (alive)
+        if (disposed)
         {
-            child.onNext(_value);
+            return;
+        }
+
+        try
+        {
+            observer.onNext(_value);
+        }
+        catch (_)
+        {
+            unsubscribe();
         }
     }
 
     public function onError(_value : Exception)
     {
-        if (alive)
+        if (disposed)
         {
-            child.onError(_value);
-
-            unsubscribe();
-
-            alive = false;
+            return;
         }
+
+        observer.onError(_value);
+
+        unsubscribe();
     }
 
     public function onCompleted()
     {
-        if (alive)
+        if (disposed)
         {
-            child.onCompleted();
-
-            unsubscribe();
-
-            alive = false;
+            return;
         }
-    }
+        
+        observer.onCompleted();
 
-    public function isAlive()
-    {
-        return alive;
+        unsubscribe();
     }
 
     function unsubscribe()
     {
+        if (disposed)
+        {
+            return;
+        }
+
         if (subscription != null)
         {
             subscription.unsubscribe();
         }
+
+        disposed = true;
     }
 }

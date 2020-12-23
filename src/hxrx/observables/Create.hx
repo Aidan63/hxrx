@@ -16,10 +16,7 @@ class Create<T> implements IObservable<T>
         final detaching    = new AutoDetachingObserver(_observer);
         final subscription = func(detaching);
 
-        if (!detaching.isAlive())
-        {
-            subscription.unsubscribe();
-        }
+        detaching.setSubscription(subscription);
 
         return subscription;
     }

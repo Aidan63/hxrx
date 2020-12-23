@@ -21,10 +21,7 @@ class FlatMap<T, E> implements IObservable<E>
         final child        = new Observer(detaching.onNext, detaching.onError, null);
         final subscription = source.subscribe(new Observer(v -> func(v).subscribe(child), detaching.onError, detaching.onCompleted));
 
-        if (!detaching.isAlive())
-        {
-            subscription.unsubscribe();
-        }
+        detaching.setSubscription(subscription);
 
         return subscription;
     }
