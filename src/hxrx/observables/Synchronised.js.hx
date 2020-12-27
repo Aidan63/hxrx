@@ -18,10 +18,7 @@ class Synchronised<T> implements IObservable<T>
         final detaching    = new AutoDetachingObserver(_observer);
         final subscription = source.subscribe(detaching);
 
-        if (!detaching.isAlive())
-        {
-            subscription.unsubscribe();
-        }
+        detaching.setSubscription(subscription);
 
         return subscription;
     }

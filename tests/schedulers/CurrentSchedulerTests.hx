@@ -67,7 +67,7 @@ class CurrentSchedulerTests extends BuddySuite
                     final t2 = Timer.stamp();
     
                     result.should.be(expected);
-                    (t2 - t1).should.beGreaterThan(1);
+                    ((t2 - t1) >= 1).should.be(true);
                 });
                 it('will delay by the specified time before running inner functions', {
                     var result   = [];
@@ -90,7 +90,7 @@ class CurrentSchedulerTests extends BuddySuite
                     final t2 = Timer.stamp();
     
                     result.should.containExactly(expected);
-                    (t2 - t1).should.beGreaterThan(2);
+                    ((t2 - t1) >= 2).should.be(true);
                 });
                 it('will sort scheduled tasks and execute based on time', {
                     var result     = 0;
@@ -134,7 +134,7 @@ class CurrentSchedulerTests extends BuddySuite
                     final t2 = Timer.stamp();
 
                     result.should.be(expected);
-                    (t2 - t1).should.beGreaterThan(1);
+                    ((t2 - t1) >= 1).should.be(true);
                 });
                 it('will will wait until the target date until running inner scheduled tasks', {
                     var result   = [];
@@ -160,7 +160,7 @@ class CurrentSchedulerTests extends BuddySuite
                     final t2 = Timer.stamp();
     
                     result.should.containExactly(expected);
-                    (t2 - t1).should.beGreaterThan(2);
+                    ((t2 - t1) >= 2).should.be(true);
                 });
             });
         });

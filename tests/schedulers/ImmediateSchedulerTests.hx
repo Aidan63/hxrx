@@ -67,7 +67,7 @@ class ImmediateSchedulerTests extends BuddySuite
                     final t2 = Timer.stamp();
     
                     result.should.be(expected);
-                    (t2 - t1).should.beGreaterThan(1);
+                    ((t2 - t1) >= 1).should.be(true);
                 });
                 it('will run inner scheduled tasks immediately but first delay by the specified time', {
                     var result   = [];
@@ -90,7 +90,7 @@ class ImmediateSchedulerTests extends BuddySuite
                     final t2 = Timer.stamp();
     
                     result.should.containExactly(expected);
-                    (t2 - t1).should.beGreaterThan(2);
+                    ((t2 - t1) >= 2).should.be(true);
                 });
             });
             describe('scheduleAt', {
@@ -110,7 +110,7 @@ class ImmediateSchedulerTests extends BuddySuite
                     final t2 = Timer.stamp();
 
                     result.should.be(expected);
-                    (t2 - t1).should.beGreaterThan(1);
+                    ((t2 - t1) >= 1).should.be(true);
                 });
                 it('will run inner scheduled tasks immediately but first wait until the target date has arrived', {
                     var result   = [];
@@ -136,7 +136,7 @@ class ImmediateSchedulerTests extends BuddySuite
                     final t2 = Timer.stamp();
     
                     result.should.containExactly(expected);
-                    (t2 - t1).should.beGreaterThan(2);
+                    ((t2 - t1) >= 2).should.be(true);
                 });
             });
         });
