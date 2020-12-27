@@ -7,6 +7,7 @@ class Tests implements Buddy<[
     observables.ScanTests,
     observables.PublishTests,
     observables.RefCountTests,
+    observables.CreateTests,
     observer.AutoDetachingObserverTests,
     schedulers.ImmediateSchedulerTests,
     schedulers.CurrentSchedulerTests,
