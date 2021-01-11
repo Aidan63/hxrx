@@ -11,5 +11,6 @@ class Tests implements Buddy<[
     observer.AutoDetachingObserverTests,
     schedulers.ImmediateSchedulerTests,
     schedulers.CurrentSchedulerTests,
+    subjects.PublishSubjectTests,
     subscriptions.SingleTests,
     subscriptions.CompositeTests ]> { }
