@@ -120,3 +120,13 @@ function synchronise<T>(_source : IObservable<T>) : IObservable<T>
 {
     return new Synchronised(_source);
 }
+
+function subscribeOn<T>(_source : IObservable<T>, _scheduler : IScheduler) : IObservable<T>
+{
+    return new SubscribeOn(_source, _scheduler);
+}
+
+function observeOn<T>(_source : IObservable<T>, _scheduler : IScheduler) : IObservable<T>
+{
+    return new ObserverOn(_source, _scheduler);
+}
