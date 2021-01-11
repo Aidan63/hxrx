@@ -1,11 +1,12 @@
 package hxrx.observables;
 
 import haxe.Exception;
+import hxrx.schedulers.IScheduler;
 import hxrx.subscriptions.Empty;
 
 // Create
 
-function create<T>(_func : (_observer : IObserver<T>)->ISubscription)
+function create<T>(_func : (_observer : IObserver<T>)->ISubscription) : IObservable<T>
 {
     return new Create(_func);
 }
