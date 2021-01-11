@@ -88,7 +88,10 @@ function flatMap<T, E>(_source : IObservable<T>, _func : (_value : T)->IObservab
 
 // Filter
 
-
+function filter<T>(_source : IObservable<T>, _func : (_value : T)->Bool) : IObservable<T>
+{
+    return new Filter(_source, _func);
+}
 
 // Utility
 
