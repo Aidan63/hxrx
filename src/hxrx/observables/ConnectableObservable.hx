@@ -3,23 +3,22 @@ package hxrx.observables;
 import hxrx.observer.AutoDetachingObserver;
 import hxrx.observer.Observer;
 import hxrx.subscriptions.Single;
-import haxe.ds.List;
 
 class ConnectableObservable<T> implements IConnectableObservable<T>
 {
     final source : IObservable<T>;
 
-    final observers : List<IObserver<T>>;
+    final observers : Array<IObserver<T>>;
 
     public function new(_source)
     {
         source    = _source;
-        observers = new List();
+        observers = [];
     }
 
     public function subscribe(_observer : IObserver<T>) : ISubscription
     {
-        observers.add(_observer);
+        observers.push(_observer);
 
         return new Single(remove.bind(_observer));
     }
