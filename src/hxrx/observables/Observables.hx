@@ -1,5 +1,6 @@
 package hxrx.observables;
 
+import hxrx.observer.Observer;
 import haxe.Exception;
 import hxrx.schedulers.IScheduler;
 import hxrx.subscriptions.Empty;
@@ -133,4 +134,21 @@ function subscribeOn<T>(_source : IObservable<T>, _scheduler : IScheduler) : IOb
 function observeOn<T>(_source : IObservable<T>, _scheduler : IScheduler) : IObservable<T>
 {
     return new ObserverOn(_source, _scheduler);
+}
+
+// Subscription Shortcuts
+
+overload extern inline function subscribeFunction<T>(_source : IObservable<T>, _onNext : T->Void)
+{
+    _source.subscribe(new Observer(_onNext, null, null));
+}
+
+overload extern inline function subscribeFunction<T>(_source : IObservable<T>, _onNext : T->Void, _onError : Exception->Void)
+{
+    _source.subscribe(new Observer(_onNext, _onError, null));
+}
+
+overload extern inline function subscribeFunction<T>(_source : IObservable<T>, _onNext : T->Void, _onError : Exception->Void, _onComplete : Void->Void)
+{
+    _source.subscribe(new Observer(_onNext, _onError, _onComplete));
 }
