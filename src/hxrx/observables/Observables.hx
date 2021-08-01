@@ -140,15 +140,15 @@ function observeOn<T>(_source : IObservable<T>, _scheduler : IScheduler) : IObse
 
 overload extern inline function subscribeFunction<T>(_source : IObservable<T>, _onNext : T->Void)
 {
-    _source.subscribe(new Observer(_onNext, null, null));
+    return _source.subscribe(new Observer(_onNext, null, null));
 }
 
 overload extern inline function subscribeFunction<T>(_source : IObservable<T>, _onNext : T->Void, _onError : Exception->Void)
 {
-    _source.subscribe(new Observer(_onNext, _onError, null));
+    return _source.subscribe(new Observer(_onNext, _onError, null));
 }
 
 overload extern inline function subscribeFunction<T>(_source : IObservable<T>, _onNext : T->Void, _onError : Exception->Void, _onComplete : Void->Void)
 {
-    _source.subscribe(new Observer(_onNext, _onError, _onComplete));
+    return _source.subscribe(new Observer(_onNext, _onError, _onComplete));
 }
